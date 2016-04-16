@@ -1,0 +1,40 @@
+{
+    "builders": [{
+	"name": "openstack_ubuntu_14.04",
+	"type": "openstack",
+	"ssh_username": "ubuntu",
+	"image_name": "ubuntu_pan_{{user `build_timestamp`}}",
+	"source_image": "9eac331d-46b6-4de8-b7c4-14b8bd9c7214",
+	"use_floating_ip": true,
+	"floating_ip_pool": "ext-net",
+	"security_groups": ["default", "remote SSH", "remote HTTP", "remote https"],
+	"networks": ["fc77a88d-a9fb-47bb-a65d-39d1be7a7174"],
+	"flavor": "m1.small",
+	"ssh_keypair_name": "jmatt_lsst",
+	"ssh_private_key_file": "/Users/jmatt/.ssh/id_rsa_lsst"
+    }],
+    "provisioners": [
+	{
+            "type": "shell",
+	    "inline": [
+		"sudo apt-get install software-properties-common",
+		"sudo apt-add-repository ppa:ansible/ansible",
+		"sudo apt-get update",
+		"sudo apt-get -y install ansible",
+		"sudo apt-get -y upgrade"
+	    ]
+        },
+        {
+            "type": "ansible-local",
+            "playbook_file": "./ansible/main.yml",
+	    "group_vars": "./ansible/group_vars",
+	    "role_paths": [
+		"./ansible/roles/packages"
+	    ]
+        }
+    ],
+    "variables": {
+	"build_timestamp": "{{isotime \"20060102150405\"}}",
+	"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDB385clSytoPtFQowiQhJZCnPoaVyRPUmqVuysHDMeZ91DDO1puYXUJIn1+CSYe44xJ14UN4/CIAJDHHcruBHN9krf3ra86sqddF3NhGgOuYMxzLyZiwGiBBhZcQVoChHB1F9dPPnQe6jfkfJ+Oq9Sf4Vt1/Xo5hRk9QbtB6MWPq7TGdyeszQ4yn5JoIyJ3AMwhy93wCwmPCaV/NDtTRTe6zfIyRwYXjUjf5w/RHTqg/B5wotERyeWDtWgeYir7eQIMPFi5ATtJJnfk5Ne++g2PbvilXVZMtAcYi+slrHaZdsXYYftA9KyweW/VmkKqVKvfiAmHnikBX5USc1fYM2K6MwelHjaiVUhJvRx+Oj6y1jEMaxGdJ/JBxpvw6JlGYak9ritdnrvMIFa2WcVEgU5Gpg9oj5sPINxgBrzNesMIQw9AicgzNhnAwhaO5I9zngPTVcCV3o6RqsZHn0su4txu1MXv2RV42Vk4zuuHHvFWCU6VKLy/LHaPQjy3ISm2tSEQ6vUSHa+YdhsDm0St6TFzyh1Gcy7sg1kIQrikn1xxto+CwjzNc0BSzqmiWRA8PDE4vaVB1MjhD+qElmRjkvCKVEbLXxoijwzFJULYJ8ajopDC2lROhqa5mz7y1kZgKUJvDoTPY001M4Hix2qux9s/0lvXUweejNj47+roLtp7w== jmatt@lsst.org"
+    }
+},

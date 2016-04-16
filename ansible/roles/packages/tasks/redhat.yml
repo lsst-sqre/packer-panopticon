@@ -1,0 +1,27 @@
+---
+# Install packages on a redhat family distribution.
+
+- name: Install EPEL
+  yum: name=epel-release state=present
+
+- name: Install panopticon package dependencies
+  yum: name={{ item }} state=installed
+  with_items:
+   - java-1.8.0-openjdk-headless.x86_64
+   - cloud-init
+
+- name: Add the Elasticsearch RPM key.
+  rpm_key: state=present key=https://packages.elastic.co/GPG-KEY-elasticsearch
+
+- name: Add the Elasticsearch repository.
+  yumrepo:
+    name: Elasticsearch repository
+    description: Elasticsearch repository for 2.x packages
+    baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+    gpgcheck: yes
+
+- name: Install elasticsearch.
+  yum: name=elasticsearch state=latest
+   
+- name: Configure Elasticsearch.
+  include: elasticsearch.yml
