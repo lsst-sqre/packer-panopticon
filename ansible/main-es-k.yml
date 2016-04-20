@@ -5,4 +5,5 @@
     - "group_vars/all"
 
   roles:
-    - packages
+    - jmatt.elasticsearch-packages
+    - jmatt.kibana-packages
