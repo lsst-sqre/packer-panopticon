@@ -1,0 +1,6 @@
+python-openstackclient==2.3.0
+# This is probably not the best way to install ansible because
+# you need to pull the git submodules.
+# `git submodule update --init --recursive`
+# ansible==2.1
+-e git+git@github.com:ansible/ansible.git#egg=ansible

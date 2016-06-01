@@ -1,0 +1,52 @@
+{
+    "builders": [{
+	"name": "openstack_ubuntu_14.04_lfr",
+	"type": "openstack",
+	"ssh_username": "vagrant",
+	"image_name": "ubuntu_pan_lfr_{{user `build_timestamp`}}",
+	"source_image": "dc2b9aed-2fd7-4059-90c2-451d14d08477",
+	"use_floating_ip": true,
+	"floating_ip_pool": "ext-net",
+	"security_groups": ["default", "remote SSH", "remote HTTP", "remote https"],
+	"networks": ["fc77a88d-a9fb-47bb-a65d-39d1be7a7174"],
+	"flavor": "m1.small",
+	"ssh_keypair_name": "jmatt_lsst",
+	"ssh_private_key_file": "/Users/jmatt/.ssh/id_rsa_lsst"
+    }],
+    "provisioners": [
+	{
+            "type": "shell",
+	    "inline": [
+		"sudo apt-get update",
+		"sudo apt-get -y install git python-pip python-dev software-properties-common",
+		"sudo git clone https://github.com/ansible/ansible.git /opt/ansible",
+		"cd /opt/ansible;sudo git submodule update --init --recursive",
+		"cd /opt/ansible;sudo python setup.py install",
+		"sudo apt-get -y upgrade"
+	    ]
+        },
+	{
+            "type": "ansible-local",
+            "playbook_file": "./ansible/main-lfr.yml",
+	    "group_vars": "./ansible/group_vars",
+	    "role_paths": [
+		"./ansible/roles/jmatt.logstash-packages",
+		"./ansible/roles/jmatt.fluentd-packages",
+		"./ansible/roles/jmatt.riemann-packages",
+		"./ansible/roles/jmatt.editor-packages",
+		"./ansible/roles/jmatt.java-packages"
+	    ]
+	},
+	{
+"type": "shell",
+	    "execute_command": "echo 'ubuntu' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+	    "scripts": [
+		"scripts/sshd.sh",
+		"scripts/cleanup.sh"
+	    ]
+	}
+    ],
+    "variables": {
+	"build_timestamp": "{{isotime \"20060102150405\"}}"
+    }
+},

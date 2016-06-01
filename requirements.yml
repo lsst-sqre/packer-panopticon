@@ -1,0 +1,8 @@
+- src: jmatt.cloud-packages
+- src: jmatt.editor-packages
+- src: jmatt.java-packages
+- src: jmatt.elasticsearch-packages
+- src: jmatt.kibana-packages
+- src: jmatt.logstash-packages
+- src: jmatt.fluentd-packages
+- src: jmatt.riemann-packages
