@@ -3,3 +3,4 @@ packer_cache/*
 centos*
 ubuntu*
 *.qcow2
+ansible/roles/*
