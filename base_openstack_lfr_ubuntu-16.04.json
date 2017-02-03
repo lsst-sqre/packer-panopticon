@@ -4,7 +4,7 @@
     "type": "openstack",
     "ssh_username": "ubuntu",
     "image_name": "ubuntu_pan_lfr_{{user `build_timestamp`}}",
-    "source_image": "d298ee89-e8e1-4c2b-b61e-dfda7b1f4335",
+    "source_image": "3eafe7dd-d90d-4d8e-ab70-e0c757a11bf7",
     "use_floating_ip": true,
     "floating_ip_pool": "ext-net",
     "security_groups": ["default", "remote SSH", "remote HTTP", "remote https", "elasticsearch"],
@@ -24,11 +24,10 @@
 	"ping -w 600 -c 2 -i 10 archive.ubuntu.com",
 	"ping -w 600 -c 2 -i 10 security.ubuntu.com",
 	"sudo apt-get update",
-	"sudo apt-get -y install git python python-dev python-setuptools software-properties-common libffi-dev",
-	"sudo git clone https://github.com/ansible/ansible.git /opt/ansible",
-	"cd /opt/ansible;sudo git submodule update --init --recursive",
-	"cd /opt/ansible;sudo python setup.py install",
-	"sudo apt-get -y upgrade"
+	"sudo apt-get -y install git python python-dev python-setuptools software-properties-common libffi-dev python-pip unattended-upgrades",
+	"sudo add-apt-repository ppa:ansible/ansible",
+	"sudo apt-get update",
+	"sudo apt-get -y install ansible"
       ]
     },
     {
